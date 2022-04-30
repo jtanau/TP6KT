@@ -8,41 +8,39 @@ function DnD(canvas, interactor) {
   this.xFinal = 0;
   this.yFinal = 0;
   this.isClique = false;
+  this.interactor=interactor;
 
 	// Developper les 3 fonctions gérant les événements
   this.sourisCliquer = function (evt) {
-    const pos = getMousePosition(canvas, evt)
-    this.xFinal = this.x = pos.x
-    this.yFinal = this.y = pos.y
-    this.isClique = true
-    interactor.onInteractionStart(this)
-    console.log(evt)
+    var pos = getMousePosition(canvas, evt)
+    this.x = pos.x;
+    this.y = pos.y;
+    this.isClique = true;
+    this.interactor.onInteractionStart(this);
   }.bind(this);
 
   this.sourisEnDeplacement = function (evt) {
     if(this.isClique) {
-      this.x = this.xFinal
-      this.y = this.yFinal
-      const pos = getMousePosition(canvas, evt)
-      this.xFinal = pos.x
-      this.yFinal = pos.y
-      interactor.onInteractionUpdate(this)
-      console.log(evt)
+      var pos = getMousePosition(canvas, evt);
+      this.xFinal = pos.x;
+      this.yFinal = pos.y;
+      this.isClique = true;
+      this.interactor.onInteractionUpdate(this);
     }
   }.bind(this);
 
   this.sourisRelacher = function (evt) {
-    if(this.isClique) {
-      const pos = getMousePosition(canvas, evt)
-      this.xFinal = pos.x
-      this.yFinal = pos.y
-      this.isClique = false
-      interactor.onInteractionEnd(this)
-      console.log(evt)
-    }
+    var pos = getMousePosition(canvas, evt)
+    this.xFinal = pos.x;
+    this.yFinal = pos.y;
+    this.isClique = false;
+    interactor.onInteractionEnd(this);
   }.bind(this);
 
 	// Associer les fonctions précédentes aux évènements du canvas.
+  canvas.addEventListener('mousedown', this.sourisCliquer, false);
+  canvas.addEventListener('mousemove', this.sourisEnDeplacement, false);
+  canvas.addEventListener('mouseup', this.sourisRelacher, false);
 };
 
 
@@ -54,6 +52,3 @@ function getMousePosition(canvas, evt) {
     y: evt.clientY - rect.top
   };
 };
-
-
-
